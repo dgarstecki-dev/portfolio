@@ -1,4 +1,5 @@
 import Page from "../components/Page";
+import meImage from "../assets/me.png";
 
 export default function Home() {
     return (
@@ -12,7 +13,7 @@ export default function Home() {
                         I am currently living in the Des Moines Metro area with my wife after having moved 3 months ago, and I am excited to start contributing
                         my skills where I can.
                     </p>
-                    <img src="src/assets/me.png" style={{flex: 1, minWidth: 0, width: "100%", height: "auto", objectFit: "cover", borderRadius: "80px"}} />
+                    <img src={meImage} style={{flex: 1, minWidth: 0, width: "100%", height: "auto", objectFit: "cover", borderRadius: "80px"}} />
                 </div>
             </Page>
         </>
