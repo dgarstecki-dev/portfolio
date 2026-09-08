@@ -2,12 +2,12 @@
 {
     public class Project
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public List<string> TechStack { get; set; } = new();
-        public string? GitHubUrl { get; set; }
-        public string? LiveUrl { get; set; }
-        public string Category { get; set; } = string.Empty; // e.g. "Work" or "Personal"
+        public int Id { get; init; }
+        public string Title { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public List<string> TechStack { get; init; } = new();
+        public string? GitHubUrl { get; init; }
+        public string? LiveUrl { get; init; }
+        public string Category { get; init; } = string.Empty; // e.g. "Work" or "Personal"
     }
 }
