@@ -12,6 +12,8 @@ interface FormData {
     honey: string; // honeypot field for spam prevention
 }
 
+type SubmitStatus = "idle" | "sending" | "success" | "error";
+
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Contact() {
@@ -19,6 +21,7 @@ export default function Contact() {
         fName: "", lName: "", email: "", phone: "", subject: "", message: "", honey: ""
     });
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
+    const [status, setStatus] = useState<SubmitStatus>("idle");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -31,18 +34,38 @@ export default function Contact() {
         if (!form.lName.trim()) newErrors.lName = "Last name is required";
         if (!form.email.trim()) newErrors.email = "Email is required";
         else if (!emailPattern.test(form.email)) newErrors.email = "Enter a valid email";
+        if (!form.subject.trim()) newErrors.subject = "Subject is required";
         if (!form.message.trim()) newErrors.message = "Message can't be empty";
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (form.honey.trim()) return; // honeypot check
+
+        if (form.honey.trim()) return; // honeypot check — silently drop
 
         if (!validate()) return; // stop here if invalid — nothing sent
-        console.log("Valid, ready to send:", form);
-        // fetch(`${import.meta.env.VITE_API_URL}/api/contact`, { method: "POST", body: JSON.stringify(form), ... })
+
+        setStatus("sending");
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with ${response.status}`);
+            }
+
+            setStatus("success");
+            setForm({ fName: "", lName: "", email: "", phone: "", subject: "", message: "", honey: "" });
+        } catch (err) {
+            console.error("Contact form submission failed:", err);
+            setStatus("error");
+        }
     };
 
     return (
@@ -51,7 +74,14 @@ export default function Contact() {
                 <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: 25}}>
                     <h1>Contact Form</h1>
 
-                    <form method="POST" onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: 20}}>
+                    {status === "success" && (
+                        <p style={{ color: "green" }}>Thanks for reaching out! I'll get back to you soon.</p>
+                    )}
+                    {status === "error" && (
+                        <p style={{ color: "red" }}>Something went wrong sending your message. Please try again.</p>
+                    )}
+
+                    <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: 20}}>
                         <div style={{display: "flex", flexDirection: "row", gap: 50}}>
                             <div>
                                 <label className="info" htmlFor="fName">First Name: </label>
@@ -92,7 +122,9 @@ export default function Contact() {
                                 {errors.message && <span style={{ color: "red" }}>{errors.message}</span>}
                             </div>
                         </div>
-                        <button type="submit">Submit</button>
+                        <button type="submit" disabled={status === "sending"}>
+                            {status === "sending" ? "Sending..." : "Submit"}
+                        </button>
                     </form>
                 </div>
             </Page>
