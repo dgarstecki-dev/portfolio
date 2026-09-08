@@ -1,0 +1,38 @@
+# ---- .NET / Visual Studio ----
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.dtbcache.v2
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# ---- Node / Vite (frontend) ----
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor/OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+
+# Env files with secrets
+.env
+.env.local
+appsettings.Development.json
