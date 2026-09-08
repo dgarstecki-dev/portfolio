@@ -55,6 +55,12 @@
     box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
 }
 
+.contact-inputs-honey {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+}
+
 .info {
     display: block;
     font-weight: 600;
