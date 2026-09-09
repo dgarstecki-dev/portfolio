@@ -10,7 +10,13 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<PortfolioDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions
+            .EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null)));
 
 const string FrontendCorsPolicy = "AllowFrontend";
 builder.Services.AddCors(options =>
@@ -18,8 +24,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(FrontendCorsPolicy, policy =>
     {
         policy.WithOrigins(
-                "https://zealous-grass-0486b4710.3.azurestaticapps.net", // deployed Static Web App
-                "http://localhost:5173"                                  // local Vite dev server
+                "https://zealous-grass-0486b4710.3.azurestaticapps.net",
+                "http://localhost:5173"
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
