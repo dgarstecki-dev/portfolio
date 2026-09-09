@@ -3,8 +3,8 @@ import Page from "../components/Page";
 import "../App.css"
 
 interface FormData {
-    fName: string;
-    lName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     subject: string;
@@ -18,7 +18,7 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Contact() {
     const [form, setForm] = useState<FormData>({
-        fName: "", lName: "", email: "", phone: "", subject: "", message: "", honey: ""
+        firstName: "", lastName: "", email: "", phone: "", subject: "", message: "", honey: ""
     });
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
     const [status, setStatus] = useState<SubmitStatus>("idle");
@@ -30,8 +30,8 @@ export default function Contact() {
 
     const validate = (): boolean => {
         const newErrors: typeof errors = {};
-        if (!form.fName.trim()) newErrors.fName = "First name is required";
-        if (!form.lName.trim()) newErrors.lName = "Last name is required";
+        if (!form.firstName.trim()) newErrors.firstName = "First name is required";
+        if (!form.lastName.trim()) newErrors.lastName = "Last name is required";
         if (!form.email.trim()) newErrors.email = "Email is required";
         else if (!emailPattern.test(form.email)) newErrors.email = "Enter a valid email";
         if (!form.subject.trim()) newErrors.subject = "Subject is required";
@@ -61,7 +61,7 @@ export default function Contact() {
             }
 
             setStatus("success");
-            setForm({ fName: "", lName: "", email: "", phone: "", subject: "", message: "", honey: "" });
+            setForm({ firstName: "", lastName: "", email: "", phone: "", subject: "", message: "", honey: "" });
         } catch (err) {
             console.error("Contact form submission failed:", err);
             setStatus("error");
@@ -84,14 +84,14 @@ export default function Contact() {
                     <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: 20}}>
                         <div style={{display: "flex", flexDirection: "row", gap: 50}}>
                             <div>
-                                <label className="info" htmlFor="fName">First Name: </label>
-                                <input type="text" className="contact-inputs" id="fName" name="fName" placeholder="John" value={form.fName} onChange={handleChange} maxLength={20}/>
-                                {errors.fName && <span style={{ color: "red" }}>{errors.fName}</span>}
+                                <label className="info" htmlFor="firstName">First Name: </label>
+                                <input type="text" className="contact-inputs" id="firstName" name="firstName" placeholder="John" value={form.firstName} onChange={handleChange} maxLength={20}/>
+                                {errors.firstName && <span style={{ color: "red" }}>{errors.firstName}</span>}
                             </div>
                             <div>
-                                <label className="info" htmlFor="lName">Last Name: </label>
-                                <input type="text" className="contact-inputs" id="lName" name="lName" placeholder="Doe" value={form.lName} onChange={handleChange} maxLength={25}/>
-                                {errors.lName && <span style={{ color: "red" }}>{errors.lName}</span>}
+                                <label className="info" htmlFor="lastName">Last Name: </label>
+                                <input type="text" className="contact-inputs" id="lastName" name="lastName" placeholder="Doe" value={form.lastName} onChange={handleChange} maxLength={25}/>
+                                {errors.lastName && <span style={{ color: "red" }}>{errors.lastName}</span>}
                             </div>
                         </div>
                         <div style={{display: "flex", flexDirection: "row", gap: 50}}>
