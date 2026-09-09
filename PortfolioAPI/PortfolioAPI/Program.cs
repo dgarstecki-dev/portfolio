@@ -25,6 +25,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "https://zealous-grass-0486b4710.3.azurestaticapps.net",
+                "https://dgarstecki-dev.com",
+                "https://www.dgarstecki-dev.com",
                 "http://localhost:5173"
             )
             .AllowAnyHeader()
