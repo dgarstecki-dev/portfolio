@@ -90,6 +90,12 @@
     transform: scale(0.97);
 }
 
+#submit:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+    transform: none;
+}
+
 h5 {
     margin: 10px;
     padding-left: 20px;

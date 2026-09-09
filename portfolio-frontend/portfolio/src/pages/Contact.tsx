@@ -122,7 +122,7 @@ export default function Contact() {
                                 {errors.message && <span style={{ color: "red" }}>{errors.message}</span>}
                             </div>
                         </div>
-                        <button type="submit" disabled={status === "sending"}>
+                        <button type="submit" id="submit" disabled={status === "sending"}>
                             {status === "sending" ? "Sending..." : "Submit"}
                         </button>
                     </form>
