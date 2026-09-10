@@ -13,23 +13,21 @@ namespace PortfolioAPI.Controllers
         private static readonly Regex EmailPattern =
             new(@"^[^\s@]+@[^\s@]+\.[^\s@]+$", RegexOptions.Compiled);
 
-        private readonly EmailClient _emailClient;
-        private readonly string _senderAddress;
-        private readonly string _recipientAddress;
+        private readonly EmailClient? _emailClient;
+        private readonly string? _senderAddress;
+        private readonly string? _recipientAddress;
         private readonly ILogger<ContactController> _logger;
 
-        public ContactController(EmailClient emailClient, IConfiguration configuration, ILogger<ContactController> logger)
+        public ContactController(EmailClient? emailClient, IConfiguration configuration, ILogger<ContactController> logger)
         {
             _emailClient = emailClient;
             _logger = logger;
 
             // e.g. "DoNotReply@<your-id>.azurecomm.net" — the Azure-managed sender you provisioned
-            _senderAddress = configuration["Acs:SenderAddress"]
-                ?? throw new InvalidOperationException("Acs:SenderAddress is not configured.");
+            _senderAddress = configuration["Acs:SenderAddress"];
 
             // Where contact-form messages should land — almost certainly your own inbox
-            _recipientAddress = configuration["Acs:RecipientAddress"]
-                ?? throw new InvalidOperationException("Acs:RecipientAddress is not configured.");
+            _recipientAddress = configuration["Acs:RecipientAddress"];
         }
 
         [HttpPost]
@@ -62,9 +60,16 @@ namespace PortfolioAPI.Controllers
             if (errors.Count > 0)
                 return BadRequest(new { errors });
 
+            // Email isn't configured yet — fail this endpoint only, not the whole API.
+            if (_emailClient is null || string.IsNullOrWhiteSpace(_senderAddress) || string.IsNullOrWhiteSpace(_recipientAddress))
+            {
+                _logger.LogWarning("Contact form submitted but ACS email is not fully configured (client/sender/recipient missing).");
+                return StatusCode(503, new { errors = new[] { "Contact form isn't available right now. Please try again later." } });
+            }
+
             try
             {
-                await SendNotificationEmailAsync(message);
+                await SendNotificationEmailAsync(message, _emailClient, _senderAddress, _recipientAddress);
             }
             catch (RequestFailedException ex)
             {
@@ -76,7 +81,7 @@ namespace PortfolioAPI.Controllers
             return Ok(new { status = "received" });
         }
 
-        private async Task SendNotificationEmailAsync(Contact message)
+        private static async Task SendNotificationEmailAsync(Contact message, EmailClient emailClient, string senderAddress, string recipientAddress)
         {
             var subject = $"Portfolio contact: {message.Subject}";
 
@@ -86,22 +91,22 @@ namespace PortfolioAPI.Controllers
                 $"{message.Message}";
 
             var emailMessage = new EmailMessage(
-                senderAddress: _senderAddress,
+                senderAddress: senderAddress,
                 content: new EmailContent(subject)
                 {
                     PlainText = plainText,
                 },
-                // replyTo lets you hit "reply" in your inbox and answer the sender directly,
-                // even though the email technically came from your azurecomm.net address
-                recipients: new EmailRecipients(new List<EmailAddress> { new EmailAddress(_recipientAddress) })
+                recipients: new EmailRecipients(new List<EmailAddress> { new EmailAddress(recipientAddress) })
             );
 
+            // Lets you hit "reply" in your inbox and answer the sender directly, even though
+            // the email technically came from your azurecomm.net address.
             emailMessage.ReplyTo.Add(new EmailAddress(message.Email));
 
             // WaitUntil.Completed blocks until ACS confirms the send (or throws) — fine for
             // a low-volume contact form; switch to WaitUntil.Started if you want a faster
             // response and don't need to confirm delivery before replying to the client.
-            await _emailClient.SendAsync(WaitUntil.Completed, emailMessage);
+            await emailClient.SendAsync(WaitUntil.Completed, emailMessage);
         }
     }
 }

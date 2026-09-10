@@ -20,10 +20,15 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
                 errorNumbersToAdd: null)));
 
 // ACS email client, built from the connection string in App Service configuration
-// (Acs__EmailConnectionString) — never from a committed file.
-var acsConnectionString = builder.Configuration["Acs:EmailConnectionString"]
-    ?? throw new InvalidOperationException("Acs:EmailConnectionString is not configured.");
-builder.Services.AddSingleton(new EmailClient(acsConnectionString));
+// (Acs__EmailConnectionString). Only registered when configured — if it's missing,
+// EmailClient is simply never added to the container, and ContactController's
+// nullable constructor parameter receives null instead of the app failing to build.
+// This keeps a missing email setting from taking down the entire API (projects, etc.).
+var acsConnectionString = builder.Configuration["Acs:EmailConnectionString"];
+if (!string.IsNullOrWhiteSpace(acsConnectionString))
+{
+    builder.Services.AddSingleton(new EmailClient(acsConnectionString));
+}
 
 const string FrontendCorsPolicy = "AllowFrontend";
 builder.Services.AddCors(options =>
