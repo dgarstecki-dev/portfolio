@@ -1,3 +1,137 @@
+:root {
+  /* Color */
+  --color-ink: #1b2333;
+  --color-paper: #f3f5f9;
+  --color-surface: #ffffff;
+  --color-line: #dce1e8;
+  --color-muted: #5b6472;
+  --color-accent: #2f6f5e;
+  --color-accent-dark: #204b3f;
+  --color-accent-soft: rgba(47, 111, 94, 0.1);
+  --color-danger: #c1443c;
+  --color-danger-soft: rgba(193, 68, 60, 0.08);
+  --color-success: #2f7d5a;
+
+  /* Type */
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(27, 35, 51, 0.04);
+  --shadow-md: 0 8px 24px rgba(27, 35, 51, 0.08);
+
+  --content-width: 880px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-    background-color: rgb(208, 212, 251);
+  margin: 0;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-3);
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin: 0 0 var(--space-4);
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+h4 {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin: 2px 0 0;
+}
+
+p {
+  margin: 0 0 var(--space-4);
+  max-width: 68ch;
+}
+
+ul {
+  margin: var(--space-3) 0;
+  padding-left: 1.2em;
+}
+
+li {
+  margin-bottom: var(--space-2);
+}
+
+li::marker {
+  color: var(--color-accent);
+}
+
+a {
+  color: inherit;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--color-line);
+  margin: var(--space-6) 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -69,65 +69,67 @@ export default function Contact() {
     };
 
     return (
-        <>
-            <Page>
-                <div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: 25}}>
-                    <h1>Contact Form</h1>
+        <Page>
+            <div className="contact-page">
+                <h1>Contact</h1>
+                <p className="contact-intro">Have a project in mind, or just want to say hello? Send a message and I'll get back to you soon.</p>
 
-                    {status === "success" && (
-                        <p style={{ color: "green" }}>Thanks for reaching out! I'll get back to you soon.</p>
-                    )}
-                    {status === "error" && (
-                        <p style={{ color: "red" }}>Something went wrong sending your message. Please try again.</p>
-                    )}
+                {status === "success" && (
+                    <p className="form-status form-status-success">Thanks for reaching out! I'll get back to you soon.</p>
+                )}
+                {status === "error" && (
+                    <p className="form-status form-status-error">Something went wrong sending your message. Please try again.</p>
+                )}
 
-                    <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: 20}}>
-                        <div style={{display: "flex", flexDirection: "row", gap: 50}}>
-                            <div>
-                                <label className="info" htmlFor="firstName">First Name: </label>
-                                <input type="text" className="contact-inputs" id="firstName" name="firstName" placeholder="John" value={form.firstName} onChange={handleChange} maxLength={20}/>
-                                {errors.firstName && <span style={{ color: "red" }}>{errors.firstName}</span>}
-                            </div>
-                            <div>
-                                <label className="info" htmlFor="lastName">Last Name: </label>
-                                <input type="text" className="contact-inputs" id="lastName" name="lastName" placeholder="Doe" value={form.lastName} onChange={handleChange} maxLength={25}/>
-                                {errors.lastName && <span style={{ color: "red" }}>{errors.lastName}</span>}
-                            </div>
+                <form onSubmit={handleSubmit} className="contact-form">
+                    <div className="form-grid">
+                        <div className="field">
+                            <label className="field-label" htmlFor="firstName">First name</label>
+                            <input type="text" className="contact-inputs" id="firstName" name="firstName" placeholder="John" value={form.firstName} onChange={handleChange} maxLength={20} />
+                            {errors.firstName && <span className="field-error">{errors.firstName}</span>}
                         </div>
-                        <div style={{display: "flex", flexDirection: "row", gap: 50}}>
-                            <div>
-                                <label className="info" htmlFor="email">Email: </label>
-                                <input type="text" className="contact-inputs" id="email" name="email" placeholder="jdoe@gmail.com" value={form.email} onChange={handleChange} maxLength={50} />
-                                {errors.email && <span style={{ color: "red" }}>{errors.email}</span>}
-                            </div>
-                            <div>
-                                <label className="info" htmlFor="phone">Phone Number: </label>
-                                <input type="text" className="contact-inputs" id="phone" name="phone" placeholder="515-123-4567" value={form.phone} onChange={handleChange} maxLength={14} />
-                                {errors.phone && <span style={{ color: "red" }}>{errors.phone}</span>}
-                            </div>
+                        <div className="field">
+                            <label className="field-label" htmlFor="lastName">Last name</label>
+                            <input type="text" className="contact-inputs" id="lastName" name="lastName" placeholder="Doe" value={form.lastName} onChange={handleChange} maxLength={25} />
+                            {errors.lastName && <span className="field-error">{errors.lastName}</span>}
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                            <div style={{ display: "flex", flexDirection: "column", maxWidth: 700 }}>
-                                <label className="info" htmlFor="subject">Subject: </label>
-                                <input type="text" className="contact-inputs" id="subject" name="subject" placeholder="Reaching out..." value={form.subject} onChange={handleChange} maxLength={50} />
-                                {errors.subject && <span style={{ color: "red" }}>{errors.subject}</span>}
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", maxWidth: 700 }}>
-                                <label className="contact-inputs-honey" htmlFor="honey">Second Email: </label>
-                                <input type="text" className="contact-inputs-honey" id="honey" name="honey" placeholder="janedeer@gmail.com" value={form.honey} onChange={handleChange} maxLength={50} tabIndex={-1} autoComplete="off" />
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column" }}>
-                                <label className="info" htmlFor="message">Message: </label>
-                                <textarea placeholder="Hello..." id="message" className="contact-inputs" name="message" value={form.message} onChange={handleChange} rows={4} />
-                                {errors.message && <span style={{ color: "red" }}>{errors.message}</span>}
-                            </div>
+                    </div>
+
+                    <div className="form-grid">
+                        <div className="field">
+                            <label className="field-label" htmlFor="email">Email</label>
+                            <input type="text" className="contact-inputs" id="email" name="email" placeholder="jdoe@gmail.com" value={form.email} onChange={handleChange} maxLength={50} />
+                            {errors.email && <span className="field-error">{errors.email}</span>}
                         </div>
-                        <button type="submit" id="submit" disabled={status === "sending"}>
-                            {status === "sending" ? "Sending..." : "Submit"}
-                        </button>
-                    </form>
-                </div>
-            </Page>
-        </>
+                        <div className="field">
+                            <label className="field-label" htmlFor="phone">Phone number (optional)</label>
+                            <input type="text" className="contact-inputs" id="phone" name="phone" placeholder="515-123-4567" value={form.phone} onChange={handleChange} maxLength={14} />
+                            {errors.phone && <span className="field-error">{errors.phone}</span>}
+                        </div>
+                    </div>
+
+                    <div className="field">
+                        <label className="field-label" htmlFor="subject">Subject</label>
+                        <input type="text" className="contact-inputs" id="subject" name="subject" placeholder="Reaching out..." value={form.subject} onChange={handleChange} maxLength={50} />
+                        {errors.subject && <span className="field-error">{errors.subject}</span>}
+                    </div>
+
+                    <div className="honeypot-field" aria-hidden="true">
+                        <label htmlFor="honey">Second email</label>
+                        <input type="text" id="honey" name="honey" placeholder="janedeer@gmail.com" value={form.honey} onChange={handleChange} maxLength={50} tabIndex={-1} autoComplete="off" />
+                    </div>
+
+                    <div className="field">
+                        <label className="field-label" htmlFor="message">Message</label>
+                        <textarea placeholder="Hello..." id="message" className="contact-inputs" name="message" value={form.message} onChange={handleChange} rows={4} />
+                        {errors.message && <span className="field-error">{errors.message}</span>}
+                    </div>
+
+                    <button type="submit" className="btn btn-primary submit-btn" disabled={status === "sending"}>
+                        {status === "sending" ? "Sending…" : "Send message"}
+                    </button>
+                </form>
+            </div>
+        </Page>
     );
 }

@@ -9,7 +9,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <NavHeader />
-      <hr />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/experience" element={<Experience />} />

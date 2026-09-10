@@ -1,21 +1,32 @@
+import { Link } from "react-router-dom";
 import Page from "../components/Page";
 import meImage from "../assets/me.png";
 
 export default function Home() {
     return (
-        <>
-            <Page>
-                <h1>David Garstecki</h1>
-                <div style={{display: "flex", flexDirection: "row", gap: 100, alignContent: "center", alignItems: "center"}}>
-                    <p style={{flex: 1, minWidth: 0, borderWidth: "2px", borderColor: "black", borderStyle: "solid", padding: "25px", borderRadius: "50px"}}>
-                        Hi, I'm David Garstecki. I am a Junior Software Developer. My first job was working as the Software Engineer for Benedictine College,
-                        where I made new applications, maintained student projects and legacy code, and built reports using data engineering and analysis.
-                        I am currently living in the Des Moines Metro area with my wife after having moved 3 months ago, and I am excited to start contributing
-                        my skills where I can.
+        <Page>
+            <div className="hero">
+                <div className="hero-intro">
+                    <h1>David Garstecki</h1>
+                    <p className="hero-meta">Junior Software Developer — Des Moines, IA</p>
+                    <p>
+                        Hi, I'm David. My first job was working as the Software Engineer for Benedictine College,
+                        where I built new applications, maintained student projects and legacy code, and built reports
+                        using data engineering and analysis. I'm currently living in the Des Moines Metro area with my
+                        wife after having moved 3 months ago, and I'm excited to start contributing my skills where I can.
                     </p>
-                    <img src={meImage} style={{flex: 1, minWidth: 0, width: "100%", height: "auto", objectFit: "cover", borderRadius: "80px"}} />
+                    <div className="hero-actions">
+                        <Link className="btn btn-primary" to="/contact">Get in touch</Link>
+                        <Link className="btn btn-secondary" to="/projects">View my work</Link>
+                    </div>
+                    <div className="hero-links">
+                        {/* TODO: swap these hrefs for your real GitHub/LinkedIn URLs */}
+                        <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    </div>
                 </div>
-            </Page>
-        </>
+                <img src={meImage} className="hero-photo" alt="David Garstecki" />
+            </div>
+        </Page>
     );
 }

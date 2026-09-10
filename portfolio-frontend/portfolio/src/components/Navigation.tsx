@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavProps {
     buttonTitle: string,
@@ -6,11 +6,12 @@ interface NavProps {
 }
 
 export default function Navigation({ buttonTitle, to }: NavProps) {
+    const { pathname } = useLocation();
+    const isActive = pathname === to;
+
     return (
-        <div className="box">
-            <Link to={to} className="nav-link">
-                {buttonTitle}
-            </Link>
-        </div>
+        <Link to={to} className={`nav-link${isActive ? " active" : ""}`}>
+            {buttonTitle}
+        </Link>
     );
 }

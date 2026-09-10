@@ -5,9 +5,5 @@ interface PageProps {
 }
 
 export default function Page({ children }: PageProps) {
-  return (
-    <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-      { children }
-    </div>
-  );
+  return <div className="page">{children}</div>;
 }
