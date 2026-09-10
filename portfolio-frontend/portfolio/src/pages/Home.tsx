@@ -20,9 +20,8 @@ export default function Home() {
                         <Link className="btn btn-secondary" to="/projects">View my work</Link>
                     </div>
                     <div className="hero-links">
-                        {/* TODO: swap these hrefs for your real GitHub/LinkedIn URLs */}
-                        <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
-                        <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <a href="https://github.com/dgarstecki-dev" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="https://linkedin.com/in/david-garstecki-0237b0204" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                     </div>
                 </div>
                 <img src={meImage} className="hero-photo" alt="David Garstecki" />

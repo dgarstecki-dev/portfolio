@@ -100,7 +100,7 @@ export default function Projects() {
         <Page>
             <h1>Projects</h1>
 
-            {state === "loading" && <p className="page-status">Loading projects...</p>}
+            {state === "loading" && <p className="page-status">Loading projects (May take up to 30 seconds as server is starting up)...</p>}
             {state === "error" && <p className="page-error">Couldn't load projects right now. Please try again later.</p>}
 
             {state === "success" && (
