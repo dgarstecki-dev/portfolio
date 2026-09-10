@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PortfolioAPI.Models;
+using Azure.Communication.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,12 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
                 maxRetryCount: 5,
                 maxRetryDelay: TimeSpan.FromSeconds(30),
                 errorNumbersToAdd: null)));
+
+// ACS email client, built from the connection string in App Service configuration
+// (Acs__EmailConnectionString) — never from a committed file.
+var acsConnectionString = builder.Configuration["Acs:EmailConnectionString"]
+    ?? throw new InvalidOperationException("Acs:EmailConnectionString is not configured.");
+builder.Services.AddSingleton(new EmailClient(acsConnectionString));
 
 const string FrontendCorsPolicy = "AllowFrontend";
 builder.Services.AddCors(options =>
