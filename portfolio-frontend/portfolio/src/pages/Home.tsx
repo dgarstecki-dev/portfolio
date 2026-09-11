@@ -12,8 +12,11 @@ export default function Home() {
                     <p>
                         Hi, I'm David. My first job was working as the Software Engineer for Benedictine College,
                         where I built new applications, maintained student projects and legacy code, and built reports
-                        using data engineering and analysis. I'm currently living in the Des Moines Metro area with my
-                        wife after having moved 3 months ago, and I'm excited to start contributing my skills where I can.
+                        using data engineering and analysis. I currently live in Des Moines, Iowa, with my wife and 
+                        am working as an independent contractor for a small start-up company. My mission is to build good
+                        relationships with clients and build software that adds value to their work. I am currently looking
+                        for a full-time position as a software developer, where I can continue to grow my skills and 
+                        contribute to meaningful projects.
                     </p>
                     <div className="hero-actions">
                         <Link className="btn btn-primary" to="/contact">Get in touch</Link>

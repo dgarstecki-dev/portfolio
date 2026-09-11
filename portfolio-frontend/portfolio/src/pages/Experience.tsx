@@ -7,9 +7,9 @@ export default function Experience() {
             <h1>Experience</h1>
 
             <div className="timeline-entry">
-                <ExperienceHeader title="Website and Mobile Application Developer" organization="Self-Employed" dates="August 2026 - Present" />
+                <ExperienceHeader title="Independent Contractor, Software Developer" organization="Software Development Services" dates="August 2026 - Present" />
                 <ul>
-                    <li>Building websites and mobile applications for clients to meet their needs as they start their business.</li>
+                    <li>Building a website and mobile application for a startup client, working directly with the founder to translate their needs into working software.</li>
                 </ul>
             </div>
 
