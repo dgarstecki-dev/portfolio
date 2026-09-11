@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using PortfolioAPI.Models;
 
@@ -6,6 +7,7 @@ namespace PortfolioAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting("projects")]
     public class ProjectsController : ControllerBase
     {
         private readonly PortfolioDbContext _context;

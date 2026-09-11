@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PortfolioAPI.Models;
 using Azure.Communication.Email;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,47 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Rate limiting — partitioned per client IP, so one visitor spamming requests
+// doesn't get to run up ACS email costs or hammer the database repeatedly.
+// Built into ASP.NET Core since .NET 7, no extra package needed.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Contact form: emails cost money to send and there's no legitimate reason
+    // for one visitor to submit repeatedly, so this is intentionally strict.
+    options.AddPolicy("contact", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(10),
+                QueueLimit = 0
+            }));
+
+    // Projects listing: a plain read, but still worth capping so a scraper/bot
+    // hammering it in a loop can't generate unbounded load.
+    options.AddPolicy("projects", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 30,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+
+    // Friendly JSON body instead of an empty 429, so the frontend can show a real message.
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            "{\"errors\":[\"Too many requests. Please wait a bit and try again.\"]}",
+            cancellationToken);
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,6 +100,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors(FrontendCorsPolicy);
+
+app.UseRateLimiter();
 
 app.UseAuthorization();
 

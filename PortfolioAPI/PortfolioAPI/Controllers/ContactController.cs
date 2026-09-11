@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Text.RegularExpressions;
 using Azure;
 using Azure.Communication.Email;
@@ -8,6 +9,7 @@ namespace PortfolioAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting("contact")]
     public class ContactController : ControllerBase
     {
         private static readonly Regex EmailPattern =
