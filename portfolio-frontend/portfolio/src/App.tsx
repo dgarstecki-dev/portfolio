@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavHeader from "./components/NavHeader";
+import ChatBot from "./components/ChatBot";
 import Home from "./pages/Home";
 import Experience from "./pages/Experience";
 import Projects from "./pages/Projects";
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
+      <ChatBot />
     </BrowserRouter>
   );
 }

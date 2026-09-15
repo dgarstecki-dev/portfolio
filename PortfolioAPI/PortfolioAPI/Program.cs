@@ -3,6 +3,7 @@ using PortfolioAPI.Models;
 using Azure.Communication.Email;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using PortfolioAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,18 @@ if (!string.IsNullOrWhiteSpace(acsConnectionString))
 {
     builder.Services.AddSingleton(new EmailClient(acsConnectionString));
 }
+
+var openAIApiKey = builder.Configuration["AzureOpenAI:ApiKey"];
+var openAIEndpoint = builder.Configuration["AzureOpenAI:Endpoint"];
+if (!string.IsNullOrWhiteSpace(openAIApiKey) && !string.IsNullOrWhiteSpace(openAIEndpoint))
+{
+    builder.Services.AddHttpClient("AzureOpenAI", client =>
+    {
+        client.BaseAddress = new Uri(openAIEndpoint);
+        client.DefaultRequestHeaders.Add("api-key", openAIApiKey);
+    });
+}
+builder.Services.AddScoped<ChatService>();
 
 const string FrontendCorsPolicy = "AllowFrontend";
 builder.Services.AddCors(options =>
@@ -87,6 +100,17 @@ builder.Services.AddRateLimiter(options =>
             "{\"errors\":[\"Too many requests. Please wait a bit and try again.\"]}",
             cancellationToken);
     };
+
+    // Chat: LLM calls cost money per request, same reasoning as the contact form.
+    options.AddPolicy("chat", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(10),
+                QueueLimit = 0
+            }));
 });
 
 var app = builder.Build();
